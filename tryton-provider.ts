@@ -32,7 +32,6 @@ export class TrytonProvider {
    */
 
   public search(json) {
-    console.log('Started search request for ', json);
     return this.tryton_session.rpc('model.app.proxy.app_search', [json])
       .map(res => { return JSON.parse(res) })
       .catch(this._handle_error);
@@ -43,10 +42,8 @@ export class TrytonProvider {
    *                    For more info please look at encode-json-write.ts
    */
   public write(json) {
-    console.log('Started write request for ', json);
     return this.tryton_session.rpc('model.app.proxy.app_write', [json])
       .map(res => {
-        console.log("got response", res)
         if (res != 'AK')
           return JSON.parse(res);
         return res
@@ -55,10 +52,8 @@ export class TrytonProvider {
   }
 
   public rpc_call(method, data) {
-    console.log("Started RPC call to ", method, " with data: ", data)
     return this.tryton_session.rpc(method, data)
       .map(res => {
-        console.log("Received response")
         return res
       })
       .catch(this._handle_error);
@@ -69,7 +64,6 @@ export class TrytonProvider {
    * @param {Observable} error Error ocurred
    */
   private _handle_error(error) {
-    console.log("Error encountered", error);
     return Observable.throw(error)
   }
 }
