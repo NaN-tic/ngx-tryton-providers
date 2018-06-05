@@ -20,9 +20,8 @@ export class TrytonProvider {
    * @param {SessionService} public tryton_session Injector for RPC calls
    */
 
-  constructor(public tryton_session: SessionService) {
-    console.log('Starting provider, setting up request');
-  }
+  constructor(public tryton_session: SessionService) {}
+
   /**
    * Searchs in tryton the given values in JSON format
    * @param {JSON} json JSON with the information to searchs, it requires
@@ -30,12 +29,26 @@ export class TrytonProvider {
    *                    More info about the format of the JSON please look
    *                    at the encode-json-read.ts file
    */
-
   public search(json) {
     return this.tryton_session.rpc('model.app.proxy.app_search', [json])
       .map(res => { return JSON.parse(res) })
       .catch(this._handle_error);
   }
+
+  /**
+   * Searchs in tryton the given values in JSON format
+   * @param {method} string
+   * @param {domain} list
+   */
+  public search_count(model, domain) {
+    let method = 'model.'+model+'.search_count';
+    return this.tryton_session.rpc(method, [domain])
+      .map(res => {
+        return res
+      })
+      .catch(this._handle_error);
+  }
+
   /**
    * Creates or updates new records in tryton
    * @param {JSON} json JSON with the values to create/update
